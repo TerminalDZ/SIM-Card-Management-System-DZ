@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useApi, useApiCall, useWebSocket } from '../hooks/useApi';
 import { ModemStatus, SimInfo, SmsMessage, BalanceResponse } from '../types';
-import { ErrorBoundary } from './ErrorBoundary';
 import { LoadingSpinner } from './LoadingSpinner';
 import { ErrorAlert } from './ErrorAlert';
 
@@ -14,19 +13,23 @@ export default function SimpleDashboard() {
   const { data: status, loading: statusLoading, error: statusError, refetch: refetchStatus } = useApi<ModemStatus>('/status');
   const { data: simInfo, loading: simLoading, error: simError, refetch: refetchSimInfo } = useApi<SimInfo>('/sim-info');
   const { data: smsData, loading: smsLoading, error: smsError, refetch: refetchSms } = useApi<{messages: SmsMessage[]}>('/sms');
-  const { data: simStatus, loading: simStatusLoading, refetch: refetchSimStatus } = useApi<any>('/sim-status');
+  const { data: simStatus, refetch: refetchSimStatus } = useApi<any>('/sim-status');
   const { call, loading: apiLoading, error: apiError } = useApiCall();
 
-  // WebSocket for real-time updates
-  useWebSocket('ws://localhost:8000/ws', (data) => {
-    if (data.type === 'status_update') {
-      refetchStatus();
-      refetchSimStatus();
-    } else if (data.type === 'sms_sent' || data.type === 'sms_deleted') {
-      refetchSms();
-    } else if (data.type === 'sim_change') {
-      refetchSimInfo();
-      refetchSimStatus();
+  // WebSocket for real-time updates (optional - won't block UI)
+  const { isConnected: wsConnected } = useWebSocket('ws://localhost:8000/ws', (data) => {
+    try {
+      if (data.type === 'status_update') {
+        refetchStatus();
+        refetchSimStatus();
+      } else if (data.type === 'sms_sent' || data.type === 'sms_deleted') {
+        refetchSms();
+      } else if (data.type === 'sim_change') {
+        refetchSimInfo();
+        refetchSimStatus();
+      }
+    } catch (error) {
+      console.warn('WebSocket message handling error:', error);
     }
   });
 
@@ -82,8 +85,35 @@ export default function SimpleDashboard() {
     return new Date(timestamp).toLocaleString();
   };
 
-  if (statusLoading) {
-    return <LoadingSpinner text="Loading system..." />;
+  // Show loading only for the first few seconds, then show UI with errors
+  const showLoading = statusLoading && !status && !statusError;
+  
+  if (showLoading) {
+    return (
+      <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', padding: '24px' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center', paddingTop: '100px' }}>
+          <LoadingSpinner text="Loading system..." />
+          <div style={{ marginTop: '20px' }}>
+            <p style={{ color: '#6b7280', marginBottom: '10px' }}>
+              WebSocket: {wsConnected ? '🟢 Connected' : '🔴 Disconnected'}
+            </p>
+            <button 
+              onClick={refetchStatus}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#3b82f6',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              Retry Connection
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -104,21 +134,55 @@ export default function SimpleDashboard() {
           {/* Connection Status */}
           <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
             <h3 style={{ fontSize: '1rem', fontWeight: '500', marginBottom: '16px' }}>Connection</h3>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{ 
-                width: '12px', 
-                height: '12px', 
-                borderRadius: '50%', 
-                backgroundColor: status?.connected ? '#10b981' : '#ef4444' 
-              }}></div>
-              <span style={{ fontWeight: '500' }}>
-                {status?.connected ? 'Connected' : 'Disconnected'}
-              </span>
-            </div>
-            {status?.port && (
-              <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '4px' }}>
-                Port: {status.port}
-              </p>
+            {statusError ? (
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ 
+                    width: '12px', 
+                    height: '12px', 
+                    borderRadius: '50%', 
+                    backgroundColor: '#ef4444' 
+                  }}></div>
+                  <span style={{ fontWeight: '500', color: '#ef4444' }}>Connection Error</span>
+                </div>
+                <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '4px' }}>
+                  Unable to reach backend
+                </p>
+                <button 
+                  onClick={refetchStatus}
+                  style={{
+                    marginTop: '8px',
+                    padding: '4px 8px',
+                    fontSize: '0.75rem',
+                    backgroundColor: '#3b82f6',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Retry
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ 
+                    width: '12px', 
+                    height: '12px', 
+                    borderRadius: '50%', 
+                    backgroundColor: status?.connected ? '#10b981' : '#ef4444' 
+                  }}></div>
+                  <span style={{ fontWeight: '500' }}>
+                    {status?.connected ? 'Connected' : 'Disconnected'}
+                  </span>
+                </div>
+                {status?.port && (
+                  <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '4px' }}>
+                    Port: {status.port}
+                  </p>
+                )}
+              </div>
             )}
             
             {/* SIM Detection Status */}
@@ -234,7 +298,55 @@ export default function SimpleDashboard() {
               {simLoading ? (
                 <LoadingSpinner text="Loading SIM info..." />
               ) : simError ? (
-                <ErrorAlert error={simError} />
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                    <div style={{ 
+                      width: '12px', 
+                      height: '12px', 
+                      borderRadius: '50%', 
+                      backgroundColor: '#ef4444' 
+                    }}></div>
+                    <span style={{ fontWeight: '500', color: '#ef4444' }}>
+                      {simError.includes('timeout') ? 'SIM Read Timeout' : 'SIM Error'}
+                    </span>
+                  </div>
+                  <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '12px' }}>
+                    {simError.includes('timeout') 
+                      ? 'SIM reading took longer than expected. This can happen with some SIM cards or when the modem is processing other commands.'
+                      : simError
+                    }
+                  </p>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button 
+                      onClick={refetchSimInfo}
+                      style={{
+                        padding: '6px 12px',
+                        fontSize: '0.875rem',
+                        backgroundColor: '#3b82f6',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      🔄 Retry SIM Read
+                    </button>
+                    <button 
+                      onClick={refetchStatus}
+                      style={{
+                        padding: '6px 12px',
+                        fontSize: '0.875rem',
+                        backgroundColor: '#6b7280',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      🔍 Check Connection
+                    </button>
+                  </div>
+                </div>
               ) : (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                   <div>

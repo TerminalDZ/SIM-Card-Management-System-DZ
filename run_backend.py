@@ -21,11 +21,12 @@ def main():
     print("-" * 50)
     
     uvicorn.run(
-        "backend.main:app",
+        "main:app",
         host=settings.HOST,
         port=settings.PORT,
         reload=settings.DEBUG,
-        log_level=settings.LOG_LEVEL.lower()
+        log_level=settings.LOG_LEVEL.lower(),
+        reload_excludes=["../frontend/node_modules/*", "../frontend/node_modules/**/*"]
     )
 
 if __name__ == "__main__":
