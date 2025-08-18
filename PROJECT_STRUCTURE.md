@@ -22,33 +22,6 @@ backend/                           # Python FastAPI Backend
 └── models/                       # Data models
     ├── __init__.py
     └── models.py                 # Pydantic models
-
-frontend/                         # React Frontend
-├── package.json                  # Node.js dependencies
-├── tailwind.config.js           # Tailwind CSS configuration
-├── postcss.config.js            # PostCSS configuration
-├── public/
-│   └── index.html               # Main HTML template
-└── src/
-    ├── index.tsx                # React entry point
-    ├── index.css                # Global styles
-    ├── App.tsx                  # Main App component
-    ├── types/
-    │   └── index.ts             # TypeScript definitions
-    ├── hooks/
-    │   └── useApi.ts            # API hooks
-    ├── lib/
-    │   └── utils.ts             # Utility functions
-    └── components/
-        ├── Dashboard.tsx        # Main dashboard component
-        └── ui/                  # UI components (shadcn/ui)
-            ├── button.tsx
-            ├── card.tsx
-            ├── input.tsx
-            ├── textarea.tsx
-            ├── badge.tsx
-            ├── progress.tsx
-            └── tabs.tsx
 ```
 
 ## 📁 Directory Descriptions
@@ -57,7 +30,7 @@ frontend/                         # React Frontend
 - **README.md**: Comprehensive documentation with features, installation, and usage
 - **SETUP.md**: Detailed step-by-step setup instructions
 - **requirements.txt**: Python package dependencies
-- **start_system.py**: Convenient script to start both backend and frontend
+- **start_system.py**: Convenient script to start the backend server
 - **run_backend.py**: Backend-only starter script
 
 ### Backend (`backend/`)
@@ -74,18 +47,6 @@ frontend/                         # React Frontend
   - Automatic operator detection
   - USSD codes and APN settings
 - **models/models.py**: Pydantic data models for API
-
-### Frontend (`frontend/`)
-- **src/App.tsx**: Main React application
-- **src/components/Dashboard.tsx**: Complete dashboard with:
-  - Real-time status monitoring
-  - SIM information display
-  - SMS management interface
-  - USSD command interface
-  - Settings and configuration
-- **src/hooks/useApi.ts**: Custom React hooks for API interaction
-- **src/components/ui/**: Modern UI components using shadcn/ui
-- **Tailwind CSS**: Modern styling framework
 
 ## 🔧 Key Features Implemented
 
@@ -119,26 +80,15 @@ frontend/                         # React Frontend
 - Network type detection (2G/3G/4G)
 - Connection status tracking
 
-### 6. Modern UI
-- Professional dashboard design
-- Responsive layout
-- Real-time data updates
-- Intuitive navigation
-- Error handling and loading states
-
 ## 🚀 Quick Start Commands
 
 ```bash
-# Install everything and start
+# Install dependencies and start
 pip install -r requirements.txt
-cd frontend && npm install && cd ..
 python start_system.py
 
 # Backend only
 python run_backend.py
-
-# Frontend only
-cd frontend && npm start
 ```
 
 ## 📡 API Endpoints
@@ -166,7 +116,7 @@ cd frontend && npm start
 - **Logging**: Configurable logging system
 - **Configuration**: Environment-based configuration
 - **Documentation**: Complete API documentation at `/docs`
-- **Security**: CORS configuration for frontend integration
+- **Security**: CORS configuration for API access
 - **Monitoring**: Real-time status monitoring
 - **Extensibility**: Easy to add new operators and features
 
@@ -190,4 +140,4 @@ cd frontend && npm start
 - Recharge: `*130*{code}#`
 - APN: `internet`
 
-This system is production-ready and provides professional-grade SIM card management capabilities with a modern, user-friendly interface.
+This system is production-ready and provides professional-grade SIM card management capabilities through a comprehensive REST API.

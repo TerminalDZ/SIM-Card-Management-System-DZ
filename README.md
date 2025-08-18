@@ -1,10 +1,9 @@
-# SIM Card Management System
+# SIM Card Management System API
 
-A professional, production-ready system for managing SIM cards with comprehensive support for Algerian mobile operators (Ooredoo Algeria, Djezzy, Mobilis). Features automatic modem detection, real-time monitoring, SMS management, and USSD operations through a modern web interface.
+A professional, production-ready API system for managing SIM cards with comprehensive support for Algerian mobile operators (Ooredoo Algeria, Djezzy, Mobilis). Features automatic modem detection, real-time monitoring, SMS management, and USSD operations through a comprehensive REST API.
 
 ![System Overview](https://img.shields.io/badge/Status-Production%20Ready-green)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
-![React](https://img.shields.io/badge/React-18.2%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104%2B-green)
 
 ## 🚀 Features
@@ -32,11 +31,11 @@ A professional, production-ready system for managing SIM cards with comprehensiv
 - **Mobilis**: Full feature support and configuration
 - **Extensible**: Easy to add new operators
 
-### Modern UI
-- **Professional Dashboard**: Clean, modern interface using shadcn/ui
-- **Responsive Design**: Works on desktop and mobile devices
-- **Real-time Updates**: Live data updates without page refresh
-- **Dark/Light Theme**: Modern theme support
+### API Features
+- **RESTful API**: Complete REST API with comprehensive endpoints
+- **WebSocket Support**: Real-time updates and notifications
+- **Auto-generated Documentation**: Interactive API docs at `/docs`
+- **OpenAPI Specification**: Standard-compliant API specification
 
 ## 🛠️ System Requirements
 
@@ -47,8 +46,6 @@ A professional, production-ready system for managing SIM cards with comprehensiv
 
 ### Software
 - **Python**: 3.8 or higher
-- **Node.js**: 16.0 or higher
-- **npm**: 8.0 or higher
 
 ## 📦 Installation
 
@@ -64,87 +61,63 @@ cd etg-api
 pip install -r requirements.txt
 ```
 
-### 3. Install Frontend Dependencies
-```bash
-# Navigate to frontend directory
-cd frontend
-
-# Install React dependencies
-npm install
-
-# Return to root directory
-cd ..
-```
-
-### 4. Connect Your Modem
+### 3. Connect Your Modem
 1. Insert your SIM card into the Huawei modem
 2. Connect the modem to a USB port
 3. Wait for Windows to install drivers (if on Windows)
 
 ## 🚀 Quick Start
 
-### Option 1: Start Everything (Recommended)
+### Start the API Server
 ```bash
-# Start both backend and frontend servers
+# Start the backend API server
 python start_system.py
 ```
 
 This will:
-- Start the backend API server on http://localhost:8000
-- Start the frontend development server on http://localhost:3000
-- Automatically open your browser to the dashboard
+- Start the API server on http://localhost:8000
+- Provide interactive API documentation at http://localhost:8000/docs
+- Enable WebSocket connections for real-time updates
 
-### Option 2: Start Servers Separately
-
-#### Start Backend Only
+### Alternative: Start Backend Only
 ```bash
 python run_backend.py
-```
-
-#### Start Frontend Only
-```bash
-cd frontend
-npm start
 ```
 
 ## 🌐 Access Points
 
 Once running, access the system at:
 
-- **Main Dashboard**: http://localhost:3000
 - **API Documentation**: http://localhost:8000/docs
 - **API Base URL**: http://localhost:8000/api
+- **WebSocket**: ws://localhost:8000/ws
 
-## 📖 User Guide
+## 📖 API Guide
 
 ### Initial Setup
 1. **Connect Modem**: Ensure your Huawei modem is connected with a SIM card
-2. **Start System**: Run `python start_system.py`
-3. **Check Connection**: The dashboard will show connection status automatically
+2. **Start API**: Run `python start_system.py`
+3. **Check Connection**: Use the `/api/status` endpoint to verify connection
 
-### Dashboard Overview
-The main dashboard provides four key sections:
+### API Overview
+The API provides comprehensive endpoints for SIM card management:
 
-#### 1. Overview Tab
-- **SIM Information**: IMSI, ICCID, IMEI, phone number
-- **Signal Strength**: Real-time signal quality indicator
-- **Network Type**: 2G/3G/4G connection status
-- **Operator Details**: Detected operator and services
+#### 1. Status & Information
+- **GET /api/status**: Modem connection status and basic information
+- **GET /api/sim-info**: Complete SIM card details and operator information
+- **GET /api/operators**: List of supported operators
 
-#### 2. SMS Tab
-- **Send SMS**: Compose and send text messages
-- **SMS Inbox**: View received and sent messages
-- **Message Management**: Delete unwanted messages
+#### 2. SMS Operations
+- **GET /api/sms**: Retrieve all SMS messages
+- **POST /api/sms/send**: Send a new SMS message
+- **DELETE /api/sms/{id}**: Delete a specific SMS message
 
-#### 3. USSD Tab
-- **Balance Check**: Quick balance inquiry button
-- **Custom USSD**: Send any USSD code
-- **Service Codes**: Quick access to operator services
+#### 3. USSD Operations
+- **POST /api/ussd**: Send any USSD command
+- **GET /api/balance**: Check account balance using operator-specific codes
 
-#### 4. Settings Tab
-- **Modem Information**: Hardware details and firmware
-- **APN Settings**: Operator-specific internet settings
-- **Connection Details**: Port and status information
+#### 4. Real-time Updates
+- **WebSocket /ws**: Real-time connection for status updates and SMS notifications
 
 ### Operator-Specific Features
 
@@ -186,8 +159,8 @@ MODEM_TIMEOUT=30
 MODEM_RETRY_COUNT=3
 AUTO_DETECT_MODEM=True
 
-# Frontend
-FRONTEND_URL=http://localhost:3000
+# CORS Configuration
+ALLOWED_ORIGINS=["*"]
 ```
 
 ### Adding New Operators
@@ -215,19 +188,12 @@ cd backend
 python main.py
 ```
 
-### Frontend Development
-```bash
-# Run frontend in development mode
-cd frontend
-npm start
-```
-
-### Building for Production
-```bash
-# Build frontend for production
-cd frontend
-npm run build
-```
+### API Testing
+Visit http://localhost:8000/docs to:
+- View all available endpoints
+- Test API calls directly in the browser
+- See request/response schemas
+- Download OpenAPI specification
 
 ## 📊 API Reference
 
@@ -278,7 +244,7 @@ Real-time updates for status changes and SMS notifications.
 1. **SIM Card**: Ensure SIM card is properly inserted
 2. **PIN Code**: If SIM has PIN, disable it or enter it manually
 3. **Network Coverage**: Check signal strength in your area
-4. **Firewall**: Ensure ports 8000 and 3000 are not blocked
+4. **Firewall**: Ensure port 8000 is not blocked
 
 #### SMS Not Working
 1. **SMS Center**: Ensure SMS center number is configured
@@ -310,8 +276,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Huawei**: For modem hardware and AT command documentation
 - **Algerian Operators**: For USSD codes and service information
 - **FastAPI**: For the excellent backend framework
-- **React**: For the frontend framework
-- **shadcn/ui**: For the beautiful UI components
 
 ## 📞 Support
 

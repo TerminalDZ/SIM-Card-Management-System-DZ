@@ -1,6 +1,6 @@
-# Setup Guide - SIM Card Management System
+# Setup Guide - SIM Card Management System API
 
-This guide provides detailed setup instructions for the SIM Card Management System.
+This guide provides detailed setup instructions for the SIM Card Management System API.
 
 ## 📋 Prerequisites
 
@@ -17,8 +17,6 @@ This guide provides detailed setup instructions for the SIM Card Management Syst
 
 ### Software Requirements
 - **Python**: 3.8 or higher
-- **Node.js**: 16.0 or higher
-- **npm**: 8.0 or higher
 - **Git**: For cloning the repository
 
 ## 🔧 Step-by-Step Installation
@@ -31,12 +29,7 @@ This guide provides detailed setup instructions for the SIM Card Management Syst
    - During installation, check "Add Python to PATH"
    - Verify: `python --version`
 
-2. **Install Node.js**:
-   - Download from https://nodejs.org
-   - Install the LTS version
-   - Verify: `node --version` and `npm --version`
-
-3. **Install Git**:
+2. **Install Git**:
    - Download from https://git-scm.com
    - Use default settings during installation
 
@@ -48,16 +41,11 @@ sudo apt update
 # Install Python and pip
 sudo apt install python3 python3-pip
 
-# Install Node.js and npm
-sudo apt install nodejs npm
-
 # Install Git
 sudo apt install git
 
 # Verify installations
 python3 --version
-node --version
-npm --version
 git --version
 ```
 
@@ -69,16 +57,11 @@ git --version
 # Install Python
 brew install python
 
-# Install Node.js
-brew install node
-
 # Install Git
 brew install git
 
 # Verify installations
 python3 --version
-node --version
-npm --version
 git --version
 ```
 
@@ -93,13 +76,6 @@ cd etg-api
 2. **Install Python Dependencies**:
 ```bash
 pip install -r requirements.txt
-```
-
-3. **Install Frontend Dependencies**:
-```bash
-cd frontend
-npm install
-cd ..
 ```
 
 ### Step 3: Hardware Setup
@@ -121,21 +97,20 @@ cd ..
 
 ### Step 4: First Run
 
-1. **Start the System**:
+1. **Start the API Server**:
 ```bash
 python start_system.py
 ```
 
 2. **What Should Happen**:
-   - Backend server starts on port 8000
-   - Frontend development server starts on port 3000
-   - Your default browser opens to http://localhost:3000
-   - Dashboard should show connection status
+   - API server starts on port 8000
+   - Interactive documentation available at http://localhost:8000/docs
+   - WebSocket endpoint available at ws://localhost:8000/ws
 
-3. **Check Connection Status**:
-   - Look at the "Connection" card in the dashboard
-   - Should show "Connected" with green indicator
-   - If disconnected, see troubleshooting section
+3. **Test the API**:
+   - Open http://localhost:8000/docs in your browser
+   - Test the `/api/status` endpoint to verify connection
+   - Check if modem is detected and connected
 
 ## 🔧 Configuration Options
 
@@ -156,22 +131,16 @@ LOG_FILE=sim_manager.log
 MODEM_TIMEOUT=30
 MODEM_RETRY_COUNT=3
 AUTO_DETECT_MODEM=True
-```
 
-### Frontend Configuration
-
-The frontend automatically connects to the backend. If you change the backend port, update the proxy setting in `frontend/package.json`:
-```json
-{
-  "proxy": "http://localhost:YOUR_BACKEND_PORT"
-}
+# CORS Settings
+ALLOWED_ORIGINS=["*"]
 ```
 
 ## 🚨 Troubleshooting
 
 ### Issue: "Modem Not Detected"
 
-**Symptoms**: Dashboard shows "Disconnected" status
+**Symptoms**: API returns disconnected status
 
 **Solutions**:
 1. **Check Physical Connection**:
@@ -232,59 +201,50 @@ sudo python start_system.py
    - Check signal strength in your area
    - Try restarting the modem
 
-### Issue: "Frontend Won't Start"
+### Issue: "API Server Won't Start"
 
 **Solutions**:
-1. **Check Node.js Installation**:
+1. **Check Python Installation**:
    ```bash
-   node --version  # Should be 16.0+
-   npm --version   # Should be 8.0+
+   python --version  # Should be 3.8+
+   pip --version
    ```
 
-2. **Clear npm Cache**:
-   ```bash
-   cd frontend
-   npm cache clean --force
-   rm -rf node_modules
-   npm install
-   ```
-
-3. **Port Already in Use**:
-   ```bash
-   # Kill processes using port 3000
-   # Linux/macOS
-   sudo lsof -ti:3000 | xargs kill -9
-   
-   # Windows
-   netstat -ano | findstr :3000
-   taskkill /PID <PID> /F
-   ```
-
-### Issue: "Backend API Errors"
-
-**Solutions**:
-1. **Check Backend Logs**:
-   - Look for error messages in the console
-   - Check log file if configured
-
-2. **Port Issues**:
-   ```bash
-   # Check if port 8000 is available
-   # Linux/macOS
-   sudo lsof -i:8000
-   
-   # Windows
-   netstat -ano | findstr :8000
-   ```
-
-3. **Python Dependencies**:
+2. **Check Dependencies**:
    ```bash
    pip install -r requirements.txt --force-reinstall
    ```
 
+3. **Port Already in Use**:
+   ```bash
+   # Kill processes using port 8000
+   # Linux/macOS
+   sudo lsof -ti:8000 | xargs kill -9
+   
+   # Windows
+   netstat -ano | findstr :8000
+   taskkill /PID <PID> /F
+   ```
+
+### Issue: "API Endpoints Not Working"
+
+**Solutions**:
+1. **Check Server Logs**:
+   - Look for error messages in the console
+   - Check log file if configured
+
+2. **Test Basic Endpoints**:
+   - Visit http://localhost:8000/docs
+   - Test the `/api/status` endpoint
+   - Check if CORS is properly configured
+
+3. **Verify Configuration**:
+   - Check `.env` file settings
+   - Ensure all required environment variables are set
+
 ## 🔄 Manual Operation
 
-If the automatic start script doesn't work, you can run components separately:
+If the automatic start script doesn't work, you can run the backend directly:
 
 ### Start Backend Only
 ```bash
@@ -292,26 +252,24 @@ cd backend
 python main.py
 ```
 
-### Start Frontend Only
-```bash
-cd frontend
-npm start
-```
-
-### Test Backend API
-Visit http://localhost:8000/docs to see the API documentation and test endpoints.
+### Test API Endpoints
+Visit http://localhost:8000/docs to:
+- View all available endpoints
+- Test API calls directly in the browser
+- See request/response schemas
+- Download OpenAPI specification
 
 ## 📊 Verification Checklist
 
 After setup, verify these work:
 
-- [ ] **Connection**: Dashboard shows "Connected"
-- [ ] **SIM Info**: Overview tab shows IMSI, ICCID, IMEI
-- [ ] **Signal**: Signal strength indicator shows a value
-- [ ] **Operator**: Operator name is detected correctly
-- [ ] **SMS**: Can view SMS tab without errors
-- [ ] **USSD**: Can enter USSD commands
-- [ ] **Real-time**: Status updates automatically
+- [ ] **API Server**: Server starts without errors
+- [ ] **Documentation**: http://localhost:8000/docs loads
+- [ ] **Connection**: `/api/status` returns connected status
+- [ ] **SIM Info**: `/api/sim-info` returns SIM details
+- [ ] **SMS**: `/api/sms` endpoint works
+- [ ] **USSD**: `/api/ussd` endpoint accepts commands
+- [ ] **WebSocket**: WebSocket connection works
 
 ## 🆘 Getting Help
 
@@ -320,10 +278,10 @@ If you're still having issues:
 1. **Check System Requirements**: Ensure all requirements are met
 2. **Review Error Messages**: Look for specific error messages in console
 3. **Check Logs**: Look at backend logs for detailed error information
-4. **Test Components**: Try each component (modem, backend, frontend) separately
+4. **Test Components**: Try each component (modem, backend) separately
 5. **Community Support**: Create an issue on GitHub with:
    - Your operating system
-   - Python and Node.js versions
+   - Python version
    - Modem model
    - Complete error messages
    - Steps you've already tried
@@ -332,26 +290,66 @@ If you're still having issues:
 
 For production deployment:
 
-1. **Build Frontend**:
-   ```bash
-   cd frontend
-   npm run build
-   ```
-
-2. **Configure Environment**:
+1. **Configure Environment**:
    - Set `DEBUG=False`
    - Configure proper logging
    - Set up reverse proxy (nginx/Apache)
 
-3. **Security**:
+2. **Security**:
    - Use proper firewall rules
    - Consider HTTPS certificates
    - Implement proper authentication
+   - Configure CORS properly
 
-4. **Monitoring**:
+3. **Monitoring**:
    - Set up log rotation
    - Monitor system resources
    - Set up health checks
+
+4. **API Documentation**:
+   - The API documentation is automatically available at `/docs`
+   - Consider disabling docs in production for security
+
+## 📡 API Usage Examples
+
+### Using curl
+```bash
+# Check status
+curl http://localhost:8000/api/status
+
+# Get SIM info
+curl http://localhost:8000/api/sim-info
+
+# Send SMS
+curl -X POST http://localhost:8000/api/sms/send \
+  -H "Content-Type: application/json" \
+  -d '{"number": "+213XXXXXXXX", "message": "Hello World"}'
+
+# Send USSD command
+curl -X POST http://localhost:8000/api/ussd \
+  -H "Content-Type: application/json" \
+  -d '{"command": "*223#"}'
+```
+
+### Using Python requests
+```python
+import requests
+
+# Base URL
+base_url = "http://localhost:8000/api"
+
+# Check status
+response = requests.get(f"{base_url}/status")
+print(response.json())
+
+# Send SMS
+sms_data = {
+    "number": "+213XXXXXXXX",
+    "message": "Hello from API"
+}
+response = requests.post(f"{base_url}/sms/send", json=sms_data)
+print(response.json())
+```
 
 ---
 
