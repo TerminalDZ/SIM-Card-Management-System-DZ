@@ -109,20 +109,24 @@ python run_backend.py
 
 ```
 
-## 📡 API Endpoints
+## �� API Endpoints
+
+### System Endpoints
+- `GET /api/health` - Health check and system status
+- `GET /api/performance` - Performance metrics and monitoring
 
 ### Multi-Modem Management
-- `GET /api/modems/detect` - Detect all available modems
+- `POST /api/modems/detect` - Detect all available modems
 - `POST /api/modems/connect` - Connect to a specific modem
 - `POST /api/modems/disconnect` - Disconnect from a specific modem
 - `GET /api/modems/status` - Get status for all connected modems
-- `GET /api/modems/{modem_id}/status` - Get status for specific modem
 
 ### Per-Modem Operations
+- `GET /api/modems/{modem_id}/status` - Get status for specific modem
 - `GET /api/modems/{modem_id}/sim-info` - Get SIM info for specific modem
 - `GET /api/modems/{modem_id}/sms` - Get SMS from specific modem
 - `POST /api/modems/{modem_id}/sms/send` - Send SMS from specific modem
-- `DELETE /api/modems/{modem_id}/sms/{id}` - Delete SMS from specific modem
+- `DELETE /api/modems/{modem_id}/sms/{message_id}` - Delete SMS from specific modem
 - `POST /api/modems/{modem_id}/ussd` - Send USSD from specific modem
 - `GET /api/modems/{modem_id}/balance` - Get balance for specific modem
 
@@ -131,12 +135,12 @@ python run_backend.py
 - `GET /api/sim-info` - SIM info of first connected modem
 - `GET /api/sms` - SMS from first connected modem
 - `POST /api/sms/send` - Send SMS from first connected modem
-- `DELETE /api/sms/{id}` - Delete SMS from first connected modem
+- `DELETE /api/sms/{message_id}` - Delete SMS from first connected modem
 - `POST /api/ussd` - Send USSD from first connected modem
 - `GET /api/balance` - Balance of first connected modem
 
 ### Real-time
-- `WS /ws` - WebSocket for real-time updates from all modems
+- `WebSocket /ws` - Real-time updates for all modems
 
 ## 🎯 Production Ready Features
 

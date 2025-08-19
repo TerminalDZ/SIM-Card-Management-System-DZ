@@ -432,6 +432,153 @@ async def get_modem_balance(modem_id: str):
         return await multi_modem_manager.get_modem_balance(modem_id)
 
 
+# Legacy Endpoints (Backward Compatibility)
+@app.get("/api/status", response_model=ModemStatus, tags=["Legacy"])
+async def get_status():
+    """
+    Get status of the first connected modem (legacy endpoint).
+    
+    Returns:
+        ModemStatus: Status of the first connected modem
+    """
+    with log_operation(logger, "Get Status (Legacy)"):
+        connected_modems = multi_modem_manager.get_connected_modems()
+        if not connected_modems:
+            raise ModemNotConnectedException("No modems connected")
+        
+        first_modem_id = connected_modems[0]
+        return await multi_modem_manager.get_modem_status(first_modem_id)
+
+
+@app.get("/api/sim-info", response_model=SimInfo, tags=["Legacy"])
+async def get_sim_info():
+    """
+    Get SIM information of the first connected modem (legacy endpoint).
+    
+    Returns:
+        SimInfo: SIM information of the first connected modem
+    """
+    with log_operation(logger, "Get SIM Info (Legacy)"):
+        connected_modems = multi_modem_manager.get_connected_modems()
+        if not connected_modems:
+            raise ModemNotConnectedException("No modems connected")
+        
+        first_modem_id = connected_modems[0]
+        return await multi_modem_manager.get_modem_sim_info(first_modem_id)
+
+
+@app.get("/api/sms", response_model=List[SmsMessage], tags=["Legacy"])
+async def get_sms():
+    """
+    Get SMS messages from the first connected modem (legacy endpoint).
+    
+    Returns:
+        List[SmsMessage]: SMS messages from the first connected modem
+    """
+    with log_operation(logger, "Get SMS (Legacy)"):
+        connected_modems = multi_modem_manager.get_connected_modems()
+        if not connected_modems:
+            raise ModemNotConnectedException("No modems connected")
+        
+        first_modem_id = connected_modems[0]
+        return await multi_modem_manager.get_modem_sms(first_modem_id)
+
+
+@app.post("/api/sms/send", response_model=SuccessResponse, tags=["Legacy"])
+async def send_sms(request: SmsRequest):
+    """
+    Send SMS from the first connected modem (legacy endpoint).
+    
+    Args:
+        request: SmsRequest containing recipient number and message content
+        
+    Returns:
+        SuccessResponse: SMS sending status
+    """
+    with log_operation(logger, f"Send SMS (Legacy) to {request.number}"):
+        connected_modems = multi_modem_manager.get_connected_modems()
+        if not connected_modems:
+            raise ModemNotConnectedException("No modems connected")
+        
+        first_modem_id = connected_modems[0]
+        success = await multi_modem_manager.send_modem_sms(first_modem_id, request.number, request.message)
+        if success:
+            return SuccessResponse(
+                message=f"SMS sent successfully from modem {first_modem_id}",
+                data={
+                    "modem_id": first_modem_id,
+                    "recipient": request.number,
+                    "success": True
+                }
+            )
+        else:
+            raise SmsException(f"Failed to send SMS from modem {first_modem_id}")
+
+
+@app.delete("/api/sms/{message_id}", response_model=SuccessResponse, tags=["Legacy"])
+async def delete_sms(message_id: int):
+    """
+    Delete SMS message from the first connected modem (legacy endpoint).
+    
+    Args:
+        message_id: ID of the SMS message to delete
+        
+    Returns:
+        SuccessResponse: Deletion status
+    """
+    with log_operation(logger, f"Delete SMS (Legacy) {message_id}"):
+        connected_modems = multi_modem_manager.get_connected_modems()
+        if not connected_modems:
+            raise ModemNotConnectedException("No modems connected")
+        
+        first_modem_id = connected_modems[0]
+        await multi_modem_manager.delete_modem_sms(first_modem_id, message_id)
+        return SuccessResponse(
+            message=f"SMS {message_id} deleted successfully from modem {first_modem_id}",
+            data={
+                "modem_id": first_modem_id,
+                "message_id": message_id
+            }
+        )
+
+
+@app.post("/api/ussd", response_model=UssdResponse, tags=["Legacy"])
+async def send_ussd(request: UssdRequest):
+    """
+    Send USSD command from the first connected modem (legacy endpoint).
+    
+    Args:
+        request: UssdRequest containing the USSD command to send
+        
+    Returns:
+        UssdResponse: USSD command response
+    """
+    with log_operation(logger, f"Send USSD (Legacy) {request.command}"):
+        connected_modems = multi_modem_manager.get_connected_modems()
+        if not connected_modems:
+            raise ModemNotConnectedException("No modems connected")
+        
+        first_modem_id = connected_modems[0]
+        return await multi_modem_manager.send_modem_ussd(first_modem_id, request.command)
+
+
+@app.get("/api/balance", response_model=UssdResponse, tags=["Legacy"])
+async def get_balance():
+    """
+    Get account balance from the first connected modem (legacy endpoint).
+    
+    Returns:
+        UssdResponse: Balance information
+    """
+    with log_operation(logger, "Get Balance (Legacy)"):
+        connected_modems = multi_modem_manager.get_connected_modems()
+        if not connected_modems:
+            raise ModemNotConnectedException("No modems connected")
+        
+        first_modem_id = connected_modems[0]
+        return await multi_modem_manager.get_modem_balance(first_modem_id)
+
+
 # WebSocket endpoint for real-time updates
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):

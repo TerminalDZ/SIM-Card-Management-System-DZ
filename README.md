@@ -221,59 +221,40 @@ Visit http://localhost:8000/docs to:
 - See request/response schemas
 - Download OpenAPI specification
 
-## 📊 API Reference
+## �� API Reference
 
-### Multi-Modem Endpoints
+### Complete API Endpoints
 
-#### Detect Modems
-```http
-GET /api/modems/detect
-```
-Returns all detected and connected modems.
+#### System Endpoints
+- `GET /api/health` - Health check and system status
+- `GET /api/performance` - Performance metrics and monitoring
 
-#### Connect to Modem
-```http
-POST /api/modems/connect
-Content-Type: application/json
+#### Multi-Modem Management
+- `POST /api/modems/detect` - Detect all available modems
+- `POST /api/modems/connect` - Connect to a specific modem
+- `POST /api/modems/disconnect` - Disconnect from a specific modem
+- `GET /api/modems/status` - Get status for all connected modems
 
-{
-  "modem_id": "huawei_COM1"
-}
-```
+#### Per-Modem Operations
+- `GET /api/modems/{modem_id}/status` - Get status for specific modem
+- `GET /api/modems/{modem_id}/sim-info` - Get SIM info for specific modem
+- `GET /api/modems/{modem_id}/sms` - Get SMS from specific modem
+- `POST /api/modems/{modem_id}/sms/send` - Send SMS from specific modem
+- `DELETE /api/modems/{modem_id}/sms/{message_id}` - Delete SMS from specific modem
+- `POST /api/modems/{modem_id}/ussd` - Send USSD from specific modem
+- `GET /api/modems/{modem_id}/balance` - Get balance for specific modem
 
-#### Get All Modems Status
-```http
-GET /api/modems/status
-```
-Returns status for all connected modems.
+#### Legacy Endpoints (Backward Compatibility)
+- `GET /api/status` - Status of first connected modem
+- `GET /api/sim-info` - SIM info of first connected modem
+- `GET /api/sms` - SMS from first connected modem
+- `POST /api/sms/send` - Send SMS from first connected modem
+- `DELETE /api/sms/{message_id}` - Delete SMS from first connected modem
+- `POST /api/ussd` - Send USSD from first connected modem
+- `GET /api/balance` - Balance of first connected modem
 
-#### Get Specific Modem Status
-```http
-GET /api/modems/{modem_id}/status
-```
-
-#### Send SMS from Specific Modem
-```http
-POST /api/modems/{modem_id}/sms/send
-Content-Type: application/json
-
-{
-  "modem_id": "huawei_COM1",
-  "number": "+213XXXXXXXX",
-  "message": "Hello World"
-}
-```
-
-#### Send USSD from Specific Modem
-```http
-POST /api/modems/{modem_id}/ussd
-Content-Type: application/json
-
-{
-  "modem_id": "huawei_COM1",
-  "command": "*223#"
-}
-```
+#### Real-time
+- `WebSocket /ws` - Real-time updates for all modems
 
 ### Legacy Endpoints (Single Modem)
 
