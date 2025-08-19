@@ -1,14 +1,38 @@
+# Multi-Modem SIM Card Management System - Dependencies
+# Core framework and API
 fastapi==0.104.1
-uvicorn==0.24.0
-pyserial==3.5
-python-multipart==0.0.6
+uvicorn[standard]==0.24.0
 pydantic==2.5.0
-python-dotenv==1.0.0
-websockets==12.0
+pydantic-settings==2.1.0
 
-# Testing dependencies
+# Serial communication for modem control
+pyserial==3.5
+
+# Async support
+asyncio-mqtt==0.16.1
+
+# Testing and development
 pytest==7.4.3
 pytest-asyncio==0.21.1
 pytest-cov==4.1.0
-httpx==0.25.2
 pytest-mock==3.12.0
+httpx==0.25.2
+
+# Code quality and formatting
+black==23.11.0
+isort==5.12.0
+flake8==6.1.0
+mypy==1.7.1
+
+# Documentation
+mkdocs==1.5.3
+mkdocs-material==9.4.8
+
+# Logging and monitoring
+structlog==23.2.0
+
+# Type hints
+typing-extensions==4.8.0
+
+# Environment management
+python-dotenv==1.0.0

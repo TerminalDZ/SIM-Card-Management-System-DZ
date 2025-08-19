@@ -1,26 +1,36 @@
-# SIM Card Management System API
+# Multi-Modem SIM Card Management System API
 
-A professional, production-ready API system for managing SIM cards with comprehensive support for Algerian mobile operators (Ooredoo Algeria, Djezzy, Mobilis). Features automatic modem detection, real-time monitoring, SMS management, and USSD operations through a comprehensive REST API.
+A professional, production-ready API system for managing multiple SIM cards simultaneously with comprehensive support for Algerian mobile operators (Ooredoo Algeria, Djezzy, Mobilis). Features automatic multi-modem detection, real-time monitoring, SMS management, and USSD operations through a comprehensive REST API.
 
 ![System Overview](https://img.shields.io/badge/Status-Production%20Ready-green)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104%2B-green)
+![Multi-Modem](https://img.shields.io/badge/Multi--Modem-Supported-blue)
 
 ## 🚀 Features
 
 ### Core Functionality
-- **Automatic Modem Detection**: Robust detection of Huawei modems (E3531s and variants)
+- **Multi-Modem Support**: Manage multiple Huawei modems simultaneously
+- **Automatic Modem Detection**: Robust detection of multiple Huawei modems (E3531s and variants)
 - **Operator Recognition**: Automatic detection of Algerian operators based on IMSI/ICCID
-- **Real-time Monitoring**: Live signal strength, network type, and connection status
-- **SIM Information**: Complete SIM details (IMSI, ICCID, IMEI, MSISDN)
+- **Real-time Monitoring**: Live signal strength, network type, and connection status for all modems
+- **SIM Information**: Complete SIM details (IMSI, ICCID, IMEI, MSISDN) for each modem
+
+### Multi-Modem Management
+- **Modem Detection**: Automatically detect all available modems
+- **Individual Control**: Connect/disconnect modems independently
+- **Status Monitoring**: Get status for all modems or individual modems
+- **Load Balancing**: Distribute operations across multiple modems
 
 ### SMS Management
-- **Read SMS**: View all received and sent messages
+- **Multi-Modem SMS**: Send SMS from any connected modem
+- **Read SMS**: View all received and sent messages from specific modems
 - **Send SMS**: Send text messages with delivery confirmation
 - **Delete SMS**: Remove messages from SIM storage
 - **Real-time Updates**: Live SMS notifications via WebSocket
 
 ### USSD Operations
+- **Multi-Modem USSD**: Send USSD commands from any connected modem
 - **Balance Check**: Automatic balance inquiry using operator-specific codes
 - **Custom USSD**: Send any USSD command
 - **Operator Services**: Quick access to common operator services
@@ -33,15 +43,16 @@ A professional, production-ready API system for managing SIM cards with comprehe
 
 ### API Features
 - **RESTful API**: Complete REST API with comprehensive endpoints
-- **WebSocket Support**: Real-time updates and notifications
+- **WebSocket Support**: Real-time updates and notifications for all modems
 - **Auto-generated Documentation**: Interactive API docs at `/docs`
 - **OpenAPI Specification**: Standard-compliant API specification
+- **Backward Compatibility**: Legacy endpoints still work with first connected modem
 
 ## 🛠️ System Requirements
 
 ### Hardware
-- **Huawei USB Modem**: E3531s, E3531, E398, E173, or compatible
-- **USB Port**: Available USB port for modem connection
+- **Multiple Huawei USB Modems**: E3531s, E3531, E398, E173, or compatible
+- **USB Ports**: Multiple available USB ports for modem connections
 - **Operating System**: Windows 10/11, Linux, or macOS
 
 ### Software
@@ -61,9 +72,9 @@ cd etg-api
 pip install -r requirements.txt
 ```
 
-### 3. Connect Your Modem
-1. Insert your SIM card into the Huawei modem
-2. Connect the modem to a USB port
+### 3. Connect Your Modems
+1. Insert SIM cards into multiple Huawei modems
+2. Connect the modems to different USB ports
 3. Wait for Windows to install drivers (if on Windows)
 
 ## 🚀 Quick Start
@@ -78,6 +89,7 @@ This will:
 - Start the API server on http://localhost:8000
 - Provide interactive API documentation at http://localhost:8000/docs
 - Enable WebSocket connections for real-time updates
+- Automatically detect available modems
 
 ### Alternative: Start Backend Only
 ```bash
@@ -95,29 +107,43 @@ Once running, access the system at:
 ## 📖 API Guide
 
 ### Initial Setup
-1. **Connect Modem**: Ensure your Huawei modem is connected with a SIM card
+1. **Connect Modems**: Ensure your Huawei modems are connected with SIM cards
 2. **Start API**: Run `python start_system.py`
-3. **Check Connection**: Use the `/api/status` endpoint to verify connection
+3. **Detect Modems**: Use `/api/modems/detect` to find available modems
+4. **Connect Modems**: Use `/api/modems/connect` to connect to specific modems
 
-### API Overview
-The API provides comprehensive endpoints for SIM card management:
+### Multi-Modem API Overview
 
-#### 1. Status & Information
-- **GET /api/status**: Modem connection status and basic information
-- **GET /api/sim-info**: Complete SIM card details and operator information
-- **GET /api/operators**: List of supported operators
+#### 1. Modem Management
+- **GET /api/modems/detect**: Detect all available modems
+- **POST /api/modems/connect**: Connect to a specific modem
+- **POST /api/modems/disconnect**: Disconnect from a specific modem
+- **GET /api/modems/status**: Get status for all connected modems
+- **GET /api/modems/{modem_id}/status**: Get status for a specific modem
 
-#### 2. SMS Operations
-- **GET /api/sms**: Retrieve all SMS messages
-- **POST /api/sms/send**: Send a new SMS message
-- **DELETE /api/sms/{id}**: Delete a specific SMS message
+#### 2. SIM Information
+- **GET /api/modems/{modem_id}/sim-info**: Get SIM details for a specific modem
 
-#### 3. USSD Operations
-- **POST /api/ussd**: Send any USSD command
-- **GET /api/balance**: Check account balance using operator-specific codes
+#### 3. SMS Operations (Per Modem)
+- **GET /api/modems/{modem_id}/sms**: Get SMS from a specific modem
+- **POST /api/modems/{modem_id}/sms/send**: Send SMS from a specific modem
+- **DELETE /api/modems/{modem_id}/sms/{id}**: Delete SMS from a specific modem
 
-#### 4. Real-time Updates
-- **WebSocket /ws**: Real-time connection for status updates and SMS notifications
+#### 4. USSD Operations (Per Modem)
+- **POST /api/modems/{modem_id}/ussd**: Send USSD command from a specific modem
+- **GET /api/modems/{modem_id}/balance**: Check balance for a specific modem
+
+#### 5. Real-time Updates
+- **WebSocket /ws**: Real-time connection for status updates from all modems
+
+### Legacy Endpoints (Backward Compatibility)
+All original endpoints still work and use the first connected modem:
+- **GET /api/status**: Status of first connected modem
+- **GET /api/sim-info**: SIM info of first connected modem
+- **GET /api/sms**: SMS from first connected modem
+- **POST /api/sms/send**: Send SMS from first connected modem
+- **POST /api/ussd**: Send USSD from first connected modem
+- **GET /api/balance**: Balance of first connected modem
 
 ### Operator-Specific Features
 
@@ -197,7 +223,59 @@ Visit http://localhost:8000/docs to:
 
 ## 📊 API Reference
 
-### Core Endpoints
+### Multi-Modem Endpoints
+
+#### Detect Modems
+```http
+GET /api/modems/detect
+```
+Returns all detected and connected modems.
+
+#### Connect to Modem
+```http
+POST /api/modems/connect
+Content-Type: application/json
+
+{
+  "modem_id": "huawei_COM1"
+}
+```
+
+#### Get All Modems Status
+```http
+GET /api/modems/status
+```
+Returns status for all connected modems.
+
+#### Get Specific Modem Status
+```http
+GET /api/modems/{modem_id}/status
+```
+
+#### Send SMS from Specific Modem
+```http
+POST /api/modems/{modem_id}/sms/send
+Content-Type: application/json
+
+{
+  "modem_id": "huawei_COM1",
+  "number": "+213XXXXXXXX",
+  "message": "Hello World"
+}
+```
+
+#### Send USSD from Specific Modem
+```http
+POST /api/modems/{modem_id}/ussd
+Content-Type: application/json
+
+{
+  "modem_id": "huawei_COM1",
+  "command": "*223#"
+}
+```
+
+### Legacy Endpoints (Single Modem)
 
 #### Get Status
 ```http
@@ -228,21 +306,21 @@ GET /api/balance               # Check balance
 ```
 ws://localhost:8000/ws
 ```
-Real-time updates for status changes and SMS notifications.
+Real-time updates for status changes and SMS notifications from all modems.
 
 ## 🔍 Troubleshooting
 
 ### Common Issues
 
-#### Modem Not Detected
-1. **Check USB Connection**: Ensure modem is properly connected
+#### Modems Not Detected
+1. **Check USB Connections**: Ensure modems are properly connected
 2. **Driver Issues**: Install latest Huawei modem drivers
 3. **Port Access**: Run as administrator on Windows
-4. **Multiple Ports**: Some modems create multiple COM ports; system will auto-detect the correct one
+4. **Multiple Ports**: Some modems create multiple COM ports; system will auto-detect the correct ones
 
 #### Connection Failed
-1. **SIM Card**: Ensure SIM card is properly inserted
-2. **PIN Code**: If SIM has PIN, disable it or enter it manually
+1. **SIM Cards**: Ensure SIM cards are properly inserted
+2. **PIN Codes**: If SIMs have PINs, disable them or enter them manually
 3. **Network Coverage**: Check signal strength in your area
 4. **Firewall**: Ensure port 8000 is not blocked
 

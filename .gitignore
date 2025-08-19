@@ -43,19 +43,7 @@ sim_manager.log
 *.swp
 *.swo
 
-# Node.js
-frontend/node_modules/
-frontend/npm-debug.log*
-frontend/yarn-debug.log*
-frontend/yarn-error.log*
-frontend/.pnpm-debug.log*
 
-# React
-frontend/build/
-frontend/.env.local
-frontend/.env.development.local
-frontend/.env.test.local
-frontend/.env.production.local
 
 # OS
 .DS_Store
