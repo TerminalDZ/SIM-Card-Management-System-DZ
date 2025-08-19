@@ -7,7 +7,6 @@ etg-api/
 ├── LICENSE                        # MIT License
 ├── .gitignore                     # Git ignore rules
 ├── requirements.txt               # Python dependencies
-├── start_system.py               # Main system starter
 ├── run_backend.py                # Backend-only starter
 └── PROJECT_STRUCTURE.md          # This file
 
@@ -31,7 +30,6 @@ backend/                           # Python FastAPI Backend
 - **README.md**: Comprehensive documentation with features, installation, and usage
 - **SETUP.md**: Detailed step-by-step setup instructions
 - **requirements.txt**: Python package dependencies
-- **start_system.py**: Convenient script to start the backend server
 - **run_backend.py**: Backend-only starter script
 
 ### Backend (`backend/`)
@@ -107,10 +105,8 @@ backend/                           # Python FastAPI Backend
 ```bash
 # Install dependencies and start
 pip install -r requirements.txt
-python start_system.py
-
-# Backend only
 python run_backend.py
+
 ```
 
 ## 📡 API Endpoints

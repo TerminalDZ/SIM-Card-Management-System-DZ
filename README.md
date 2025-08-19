@@ -7,6 +7,8 @@ A professional, production-ready API system for managing multiple SIM cards simu
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.104%2B-green)
 ![Multi-Modem](https://img.shields.io/badge/Multi--Modem-Supported-blue)
 
+**GitHub Repository**: https://github.com/TerminalDZ/SIM-Card-Management-System-DZ
+
 ## 🚀 Features
 
 ### Core Functionality
@@ -82,7 +84,7 @@ pip install -r requirements.txt
 ### Start the API Server
 ```bash
 # Start the backend API server
-python start_system.py
+python run_backend.py
 ```
 
 This will:
@@ -108,9 +110,8 @@ Once running, access the system at:
 
 ### Initial Setup
 1. **Connect Modems**: Ensure your Huawei modems are connected with SIM cards
-2. **Start API**: Run `python start_system.py`
-3. **Detect Modems**: Use `/api/modems/detect` to find available modems
-4. **Connect Modems**: Use `/api/modems/connect` to connect to specific modems
+2. **Detect Modems**: Use `/api/modems/detect` to find available modems
+3. **Connect Modems**: Use `/api/modems/connect` to connect to specific modems
 
 ### Multi-Modem API Overview
 

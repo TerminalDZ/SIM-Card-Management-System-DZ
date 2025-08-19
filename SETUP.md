@@ -2,6 +2,8 @@
 
 This guide provides detailed setup instructions for the Multi-Modem SIM Card Management System API.
 
+**GitHub Repository**: https://github.com/TerminalDZ/SIM-Card-Management-System-DZ
+
 ## 📋 Prerequisites
 
 ### Hardware Requirements
@@ -99,7 +101,7 @@ pip install -r requirements.txt
 
 1. **Start the API Server**:
 ```bash
-python start_system.py
+python run_backend.py
 ```
 
 2. **What Should Happen**:
@@ -187,7 +189,7 @@ sudo usermod -a -G dialout $USER
 sudo chmod 666 /dev/ttyUSB0  # Replace with your port
 
 # macOS - Run with sudo
-sudo python start_system.py
+sudo python run_backend.py
 ```
 
 ### Issue: "SIM Cards Not Detected"
@@ -252,6 +254,11 @@ If the automatic start script doesn't work, you can run the backend directly:
 ```bash
 cd backend
 python main.py
+```
+
+### Alternative: Use the Starter Script
+```bash
+python run_backend.py
 ```
 
 ### Test API Endpoints
