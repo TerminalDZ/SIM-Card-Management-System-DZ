@@ -93,10 +93,7 @@ This will:
 - Enable WebSocket connections for real-time updates
 - Automatically detect available modems
 
-### Alternative: Start Backend Only
-```bash
-python run_backend.py
-```
+
 
 ## 🌐 Access Points
 
