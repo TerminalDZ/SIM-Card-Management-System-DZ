@@ -64,8 +64,8 @@ A professional, production-ready API system for managing multiple SIM cards simu
 
 ### 1. Clone the Repository
 ```bash
-git clone <repository-url>
-cd etg-api
+git clone https://github.com/TerminalDZ/SIM-Card-Management-System-DZ.git
+cd SIM-Card-Management-System-DZ
 ```
 
 ### 2. Install Python Dependencies
@@ -103,7 +103,6 @@ python run_backend.py
 Once running, access the system at:
 
 - **API Documentation**: http://localhost:8000/docs
-- **API Base URL**: http://localhost:8000/api
 - **WebSocket**: ws://localhost:8000/ws
 
 ## 📖 API Guide
