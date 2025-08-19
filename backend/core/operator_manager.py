@@ -66,7 +66,7 @@ class OperatorManager:
                         "auth_type": "none"
                 },
                 common_services={
-                        "balance": "*223#",
+                        "balance": "*200#",
                     "data_balance": "*223*2#",
                     "recharge": "*100*{code}#",
                         "call_forward": "*21*{number}#",
@@ -94,7 +94,7 @@ class OperatorManager:
                         "auth_type": "none"
                 },
                 common_services={
-                        "balance": "*100#",
+                        "balance": "*710#",
                         "data_balance": "*100*2#",
                     "recharge": "*100*{code}#",
                         "call_forward": "*21*{number}#",
@@ -122,7 +122,7 @@ class OperatorManager:
                         "auth_type": "none"
                     },
                     common_services={
-                        "balance": "*101#",
+                        "balance": "*222#",
                         "data_balance": "*101*2#",
                         "recharge": "*101*{code}#",
                         "call_forward": "*21*{number}#",

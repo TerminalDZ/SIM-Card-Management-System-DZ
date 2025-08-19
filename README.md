@@ -148,19 +148,19 @@ All original endpoints still work and use the first connected modem:
 ### Operator-Specific Features
 
 #### Ooredoo Algeria
-- **Balance Code**: `*223#`
+- **Balance Code**: `*200#`
 - **Data Balance**: `*223*2#`
 - **Recharge**: `*100*{code}#`
 - **APN**: `internet`
 
 #### Djezzy
-- **Balance Code**: `*100#`
+- **Balance Code**: `*710#`
 - **Data Balance**: `*999#`
 - **Recharge**: `*100*{code}#`
 - **APN**: `djezzy.internet`
 
 #### Mobilis
-- **Balance Code**: `*100#`
+- **Balance Code**: `*222#`
 - **Data Balance**: `*100*2#`
 - **Recharge**: `*130*{code}#`
 - **APN**: `internet`
