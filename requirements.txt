@@ -19,7 +19,7 @@ pytest-mock==3.12.0
 httpx==0.25.2
 
 # Code quality and formatting
-black==23.11.0
+black==24.3.0
 isort==5.12.0
 flake8==6.1.0
 mypy==1.7.1
