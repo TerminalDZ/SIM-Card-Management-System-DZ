@@ -35,4 +35,4 @@ structlog==23.2.0
 typing-extensions==4.8.0
 
 # Environment management
-python-dotenv==1.0.0
+python-dotenv==1.2.2
