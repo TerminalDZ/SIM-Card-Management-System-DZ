@@ -1,0 +1,46 @@
+services:
+  sim-manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: terminaldz/sim-manager:3.0.0
+    container_name: sim-manager
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    environment:
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+      APP_LOG_LEVEL: ${APP_LOG_LEVEL:-INFO}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_AUTO_DETECT_ON_STARTUP: ${APP_AUTO_DETECT_ON_STARTUP:-true}
+      APP_OPERATORS_FILE: /app/data/operators.json
+      APP_LOG_FILE: /app/logs/sim_manager.log
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./data:/app/data:ro
+      - ./logs:/app/logs
+    # USB modem passthrough — Linux hosts only.
+    # Windows users must run the app on the host (without Docker) or use
+    # `usbipd attach` over WSL2 + bind the resulting /dev/ttyUSB* device.
+    # Add an entry per modem you want exposed; comment out if unavailable.
+    devices:
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
+      - "/dev/ttyUSB1:/dev/ttyUSB1"
+      - "/dev/ttyUSB2:/dev/ttyUSB2"
+      - "/dev/ttyUSB3:/dev/ttyUSB3"
+    group_add:
+      - "20"   # dialout on most distros — adjust to match your host
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://127.0.0.1:8000/api/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"

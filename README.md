@@ -1,345 +1,333 @@
-# Multi-Modem SIM Card Management System API
-
-A professional, production-ready API system for managing multiple SIM cards simultaneously with comprehensive support for Algerian mobile operators (Ooredoo Algeria, Djezzy, Mobilis). Features automatic multi-modem detection, real-time monitoring, SMS management, and USSD operations through a comprehensive REST API.
-
-![System Overview](https://img.shields.io/badge/Status-Production%20Ready-green)
-![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.104%2B-green)
-![Multi-Modem](https://img.shields.io/badge/Multi--Modem-Supported-blue)
-
-**GitHub Repository**: https://github.com/TerminalDZ/SIM-Card-Management-System-DZ
-
-## 🚀 Features
-
-### Core Functionality
-- **Multi-Modem Support**: Manage multiple Huawei modems simultaneously
-- **Automatic Modem Detection**: Robust detection of multiple Huawei modems (E3531s and variants)
-- **Operator Recognition**: Automatic detection of Algerian operators based on IMSI/ICCID
-- **Real-time Monitoring**: Live signal strength, network type, and connection status for all modems
-- **SIM Information**: Complete SIM details (IMSI, ICCID, IMEI, MSISDN) for each modem
-
-### Multi-Modem Management
-- **Modem Detection**: Automatically detect all available modems
-- **Individual Control**: Connect/disconnect modems independently
-- **Status Monitoring**: Get status for all modems or individual modems
-- **Load Balancing**: Distribute operations across multiple modems
-
-### SMS Management
-- **Multi-Modem SMS**: Send SMS from any connected modem
-- **Read SMS**: View all received and sent messages from specific modems
-- **Send SMS**: Send text messages with delivery confirmation
-- **Delete SMS**: Remove messages from SIM storage
-- **Real-time Updates**: Live SMS notifications via WebSocket
-
-### USSD Operations
-- **Multi-Modem USSD**: Send USSD commands from any connected modem
-- **Balance Check**: Automatic balance inquiry using operator-specific codes
-- **Custom USSD**: Send any USSD command
-- **Operator Services**: Quick access to common operator services
-
-### Operator Support
-- **Ooredoo Algeria**: Full support with balance codes, APN settings
-- **Djezzy**: Complete integration with service codes
-- **Mobilis**: Full feature support and configuration
-- **Extensible**: Easy to add new operators
-
-### API Features
-- **RESTful API**: Complete REST API with comprehensive endpoints
-- **WebSocket Support**: Real-time updates and notifications for all modems
-- **Auto-generated Documentation**: Interactive API docs at `/docs`
-- **OpenAPI Specification**: Standard-compliant API specification
-- **Backward Compatibility**: Legacy endpoints still work with first connected modem
-
-## 🛠️ System Requirements
-
-### Hardware
-- **Multiple Huawei USB Modems**: E3531s, E3531, E398, E173, or compatible
-- **USB Ports**: Multiple available USB ports for modem connections
-- **Operating System**: Windows 10/11, Linux, or macOS
-
-### Software
-- **Python**: 3.8 or higher
-
-## 📦 Installation
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/TerminalDZ/SIM-Card-Management-System-DZ.git
-cd SIM-Card-Management-System-DZ
-```
-
-### 2. Install Python Dependencies
-```bash
-# Install backend dependencies
-pip install -r requirements.txt
-```
-
-### 3. Connect Your Modems
-1. Insert SIM cards into multiple Huawei modems
-2. Connect the modems to different USB ports
-3. Wait for Windows to install drivers (if on Windows)
-
-## 🚀 Quick Start
-
-### Start the API Server
-```bash
-# Start the backend API server
-python run_backend.py
-```
-
-This will:
-- Start the API server on http://localhost:8000
-- Provide interactive API documentation at http://localhost:8000/docs
-- Enable WebSocket connections for real-time updates
-- Automatically detect available modems
-
-
-
-## 🌐 Access Points
-
-Once running, access the system at:
-
-- **API Documentation**: http://localhost:8000/docs
-- **WebSocket**: ws://localhost:8000/ws
-
-## 📖 API Guide
-
-### Initial Setup
-1. **Connect Modems**: Ensure your Huawei modems are connected with SIM cards
-2. **Detect Modems**: Use `/api/modems/detect` to find available modems
-3. **Connect Modems**: Use `/api/modems/connect` to connect to specific modems
-
-### Multi-Modem API Overview
-
-#### 1. Modem Management
-- **GET /api/modems/detect**: Detect all available modems
-- **POST /api/modems/connect**: Connect to a specific modem
-- **POST /api/modems/disconnect**: Disconnect from a specific modem
-- **GET /api/modems/status**: Get status for all connected modems
-- **GET /api/modems/{modem_id}/status**: Get status for a specific modem
-
-#### 2. SIM Information
-- **GET /api/modems/{modem_id}/sim-info**: Get SIM details for a specific modem
-
-#### 3. SMS Operations (Per Modem)
-- **GET /api/modems/{modem_id}/sms**: Get SMS from a specific modem
-- **POST /api/modems/{modem_id}/sms/send**: Send SMS from a specific modem
-- **DELETE /api/modems/{modem_id}/sms/{id}**: Delete SMS from a specific modem
-
-#### 4. USSD Operations (Per Modem)
-- **POST /api/modems/{modem_id}/ussd**: Send USSD command from a specific modem
-- **GET /api/modems/{modem_id}/balance**: Check balance for a specific modem
-
-#### 5. Real-time Updates
-- **WebSocket /ws**: Real-time connection for status updates from all modems
-
-### Legacy Endpoints (Backward Compatibility)
-All original endpoints still work and use the first connected modem:
-- **GET /api/status**: Status of first connected modem
-- **GET /api/sim-info**: SIM info of first connected modem
-- **GET /api/sms**: SMS from first connected modem
-- **POST /api/sms/send**: Send SMS from first connected modem
-- **POST /api/ussd**: Send USSD from first connected modem
-- **GET /api/balance**: Balance of first connected modem
-
-### Operator-Specific Features
-
-#### Ooredoo Algeria
-- **Balance Code**: `*200#`
-- **Data Balance**: `*223*2#`
-- **Recharge**: `*100*{code}#`
-- **APN**: `internet`
-
-#### Djezzy
-- **Balance Code**: `*710#`
-- **Data Balance**: `*999#`
-- **Recharge**: `*100*{code}#`
-- **APN**: `djezzy.internet`
-
-#### Mobilis
-- **Balance Code**: `*222#`
-- **Data Balance**: `*100*2#`
-- **Recharge**: `*130*{code}#`
-- **APN**: `internet`
-
-## 🔧 Configuration
-
-### Environment Variables
-Create a `.env` file in the backend directory:
-
-```env
-# Server Configuration
-HOST=0.0.0.0
-PORT=8000
-DEBUG=True
-
-# Logging
-LOG_LEVEL=INFO
-LOG_FILE=sim_manager.log
-
-# Modem Configuration
-MODEM_TIMEOUT=30
-MODEM_RETRY_COUNT=3
-AUTO_DETECT_MODEM=True
-
-# CORS Configuration
-ALLOWED_ORIGINS=["*"]
-```
-
-### Adding New Operators
-To add support for a new operator, edit `backend/core/operator_manager.py`:
-
-```python
-"new_operator": OperatorProfile(
-    name="New Operator",
-    country="Algeria",
-    mcc="603",
-    mnc=["XX"],
-    imsi_prefix=["603XX"],
-    iccid_prefix=["89213XX"],
-    balance_ussd="*XXX#",
-    # ... other settings
-)
-```
-
-## 🛠️ Development
-
-### Backend Development
-```bash
-# Run backend in development mode
-cd backend
-python main.py
-```
-
-### API Testing
-Visit http://localhost:8000/docs to:
-- View all available endpoints
-- Test API calls directly in the browser
-- See request/response schemas
-- Download OpenAPI specification
-
-## �� API Reference
-
-### Complete API Endpoints
-
-#### System Endpoints
-- `GET /api/health` - Health check and system status
-- `GET /api/performance` - Performance metrics and monitoring
-
-#### Multi-Modem Management
-- `POST /api/modems/detect` - Detect all available modems
-- `POST /api/modems/connect` - Connect to a specific modem
-- `POST /api/modems/disconnect` - Disconnect from a specific modem
-- `GET /api/modems/status` - Get status for all connected modems
-
-#### Per-Modem Operations
-- `GET /api/modems/{modem_id}/status` - Get status for specific modem
-- `GET /api/modems/{modem_id}/sim-info` - Get SIM info for specific modem
-- `GET /api/modems/{modem_id}/sms` - Get SMS from specific modem
-- `POST /api/modems/{modem_id}/sms/send` - Send SMS from specific modem
-- `DELETE /api/modems/{modem_id}/sms/{message_id}` - Delete SMS from specific modem
-- `POST /api/modems/{modem_id}/ussd` - Send USSD from specific modem
-- `GET /api/modems/{modem_id}/balance` - Get balance for specific modem
-
-#### Legacy Endpoints (Backward Compatibility)
-- `GET /api/status` - Status of first connected modem
-- `GET /api/sim-info` - SIM info of first connected modem
-- `GET /api/sms` - SMS from first connected modem
-- `POST /api/sms/send` - Send SMS from first connected modem
-- `DELETE /api/sms/{message_id}` - Delete SMS from first connected modem
-- `POST /api/ussd` - Send USSD from first connected modem
-- `GET /api/balance` - Balance of first connected modem
-
-#### Real-time
-- `WebSocket /ws` - Real-time updates for all modems
-
-### Legacy Endpoints (Single Modem)
-
-#### Get Status
-```http
-GET /api/status
-```
-Returns modem connection status and basic information.
-
-#### Get SIM Information
-```http
-GET /api/sim-info
-```
-Returns comprehensive SIM card details and operator information.
-
-#### SMS Operations
-```http
-GET /api/sms                    # Get all SMS messages
-POST /api/sms/send              # Send SMS
-DELETE /api/sms/{message_id}    # Delete SMS
-```
-
-#### USSD Operations
-```http
-POST /api/ussd                  # Send USSD command
-GET /api/balance               # Check balance
-```
-
-#### WebSocket
-```
-ws://localhost:8000/ws
-```
-Real-time updates for status changes and SMS notifications from all modems.
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-#### Modems Not Detected
-1. **Check USB Connections**: Ensure modems are properly connected
-2. **Driver Issues**: Install latest Huawei modem drivers
-3. **Port Access**: Run as administrator on Windows
-4. **Multiple Ports**: Some modems create multiple COM ports; system will auto-detect the correct ones
-
-#### Connection Failed
-1. **SIM Cards**: Ensure SIM cards are properly inserted
-2. **PIN Codes**: If SIMs have PINs, disable them or enter them manually
-3. **Network Coverage**: Check signal strength in your area
-4. **Firewall**: Ensure port 8000 is not blocked
-
-#### SMS Not Working
-1. **SMS Center**: Ensure SMS center number is configured
-2. **Storage Full**: Delete old messages to free space
-3. **Network**: SMS requires network connection
-
-#### USSD Not Working
-1. **Operator Support**: Ensure your operator supports the USSD code
-2. **Balance**: Some codes require account balance
-3. **Network**: USSD requires active network connection
-
-### Debug Mode
-Enable debug logging by setting `DEBUG=True` in configuration.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Huawei**: For modem hardware and AT command documentation
-- **Algerian Operators**: For USSD codes and service information
-- **FastAPI**: For the excellent backend framework
-
-## 📞 Support
-
-For technical support or questions:
-- Create an issue on GitHub
-- Check the troubleshooting section
-- Review API documentation at http://localhost:8000/docs
+# SIM Card Management System (DZ)
+
+[![Status](https://img.shields.io/badge/status-production--ready-green)](#)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)](#)
+[![FastAPI](https://img.shields.io/badge/fastapi-0.118%2B-009688)](#)
+[![Pydantic](https://img.shields.io/badge/pydantic-2.10%2B-e92063)](#)
+[![License](https://img.shields.io/badge/license-MIT-yellow)](LICENSE)
+
+Professional, async-first REST + WebSocket API for managing **multiple Huawei
+USB modems** at once. Ships with first-class support for Algerian operators
+(**Ooredoo, Djezzy, Mobilis**) and runs on Linux, Windows and macOS — both
+natively and inside Docker.
+
+> **Repository:** <https://github.com/TerminalDZ/SIM-Card-Management-System-DZ>
 
 ---
 
-**Made with ❤️ for the Algerian telecommunications community**
+## ✨ Highlights
+
+- **Concurrent multi-modem orchestration** — detect, connect, monitor and
+  drive any number of modems through a single HTTP/WebSocket API.
+- **Strict layered architecture** (SOLID, KISS) — each class has one job:
+  transport, AT client, detector, device, pool, repository.
+- **Zero hardcoded operator data** — operator profiles live in
+  [`data/operators.json`](data/operators.json) and can be edited at runtime.
+- **Modern stack** — Python 3.10+, FastAPI 0.118+, Pydantic V2, Uvicorn,
+  pyserial, type-checked with mypy and linted with ruff.
+- **Production logging** — structured JSON output (optional) with rotating
+  file handler and per-operation timing.
+- **WebSocket broadcasts** — periodic status snapshots pushed to every
+  connected client, plus connection lifecycle events.
+- **Cross-platform** — works the same on Windows (`COM3`), Linux
+  (`/dev/ttyUSB0`) and macOS (`/dev/cu.HUAWEIMobile`).
+- **Docker ready** — multi-stage build, non-root runtime, USB device
+  pass-through and health checks.
+
+---
+
+## 🗂 Project layout
+
+```text
+.
+├── app/                         # Application package
+│   ├── api/                     # HTTP routers (system, modems, legacy, ws…)
+│   ├── core/                    # Logging + domain exceptions
+│   ├── modem/                   # transport → at_client → device → pool
+│   ├── operators/               # JSON-backed operator repository
+│   ├── schemas/                 # Pydantic v2 models
+│   ├── ws/                      # WebSocket connection manager
+│   ├── config.py                # Typed settings (env-based)
+│   └── main.py                  # FastAPI factory + lifespan
+├── data/operators.json          # Editable operator registry
+├── tests/                       # Pytest suite (encoders, AT client, pool, API)
+├── Dockerfile                   # Multi-stage production image
+├── docker-compose.yml           # USB pass-through + healthchecks
+├── pyproject.toml               # Modern packaging + tool config
+├── requirements.txt             # Pinned runtime deps
+├── requirements-dev.txt         # Dev / testing deps
+├── run.py                       # Convenience entry point
+└── .env.example                 # Reference configuration
+```
+
+---
+
+## 🛠 Requirements
+
+| Component | Version |
+|-----------|---------|
+| Python    | 3.10 or newer |
+| Modems    | Huawei E3531 / E3372 / E3131 / E173 / E398 (or any modem responding to AT over CDC-ACM / CDC-NCM) |
+| OS        | Windows 10/11, Ubuntu 20.04+, Fedora, Debian, macOS 12+ |
+| Docker    | 24+ (optional, recommended on Linux for production) |
+
+---
+
+## 🚀 Quick start (native)
+
+```bash
+git clone https://github.com/TerminalDZ/SIM-Card-Management-System-DZ.git
+cd SIM-Card-Management-System-DZ
+
+python -m venv .venv
+# Linux/macOS
+source .venv/bin/activate
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
+
+pip install -U pip
+pip install -r requirements.txt
+
+cp .env.example .env          # adjust as needed
+python run.py                 # OR: python -m app
+```
+
+Open <http://localhost:8000/docs> for the auto-generated Swagger UI and
+<http://localhost:8000/redoc> for ReDoc.
+
+### Linux serial-port permissions
+
+```bash
+sudo usermod -aG dialout $USER
+# log out / back in (or reboot) for the group change to apply
+```
+
+### Windows
+
+`pyserial` uses Windows COM ports natively. Install Huawei Mobile Connect
+drivers if `Device Manager` shows an unknown device. Run PowerShell as
+**administrator** the first time so it can claim the COM port.
+
+---
+
+## 🐳 Docker
+
+A multi-stage Dockerfile (Python 3.13 slim, non-root user, tini) and a
+ready-to-run Compose file are included.
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+The Compose file passes `/dev/ttyUSB0`…`/dev/ttyUSB3` through to the
+container. Adjust the `devices:` list (and the `group_add` GID) to match
+your host. Once the container is up, the API is reachable on
+`http://localhost:8000`.
+
+> 💡 **Windows users:** Docker Desktop on Windows cannot pass USB devices
+> through directly. Either run the app natively on Windows (recommended)
+> or use [usbipd-win](https://learn.microsoft.com/windows/wsl/connect-usb)
+> to forward the modem into WSL2 and run Compose there.
+
+---
+
+## ⚙️ Configuration
+
+All settings come from environment variables prefixed with `APP_` (a `.env`
+file is auto-loaded). The full reference is in [`.env.example`](.env.example).
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `APP_HOST` / `APP_PORT` | `0.0.0.0:8000` | HTTP bind address |
+| `APP_LOG_LEVEL` | `INFO` | `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL` |
+| `APP_LOG_FILE` | `logs/sim_manager.log` | Rotating file log (set empty to disable) |
+| `APP_LOG_JSON` | `false` | Emit JSON-line logs |
+| `APP_MODEM_BAUDRATE` | `115200` | Serial baud rate |
+| `APP_MODEM_READ_TIMEOUT` | `10` | Per-command read timeout (seconds) |
+| `APP_MODEM_COMMAND_RETRIES` | `2` | Retries on transport / timeout errors |
+| `APP_MODEM_DEFAULT_APN` | `internet` | Default GPRS APN |
+| `APP_MAX_CONCURRENT_MODEMS` | `10` | Hard cap on connected devices |
+| `APP_AUTO_DETECT_ON_STARTUP` | `true` | Run discovery during lifespan startup |
+| `APP_OPERATORS_FILE` | `data/operators.json` | Operator registry path |
+| `APP_CORS_ORIGINS` | `["*"]` | JSON array of allowed origins |
+| `APP_WS_BROADCAST_INTERVAL` | `15` | Seconds between status broadcasts |
+
+### Adding a new operator
+
+1. Open [`data/operators.json`](data/operators.json).
+2. Append an object with the new operator's metadata (`id`, `name`, `mcc`,
+   `imsi_prefixes`, `ussd`, `apn`, …).
+3. Restart the service. The repository validates the file at startup; an
+   invalid entry will fail fast.
+
+No code change is required.
+
+---
+
+## 🌐 API surface
+
+Browse the live, interactive documentation at `/docs`. The endpoints are
+grouped into four tags:
+
+### System
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/health` | Lightweight health probe |
+| `GET` | `/api/performance` | Counters: connected modems, WS clients, etc. |
+| `GET` | `/` | Service metadata |
+
+### Operators
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/operators` | List all operator profiles |
+| `GET` | `/api/operators/{id}` | Fetch a single profile |
+
+### Multi-Modem
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/api/modems/detect` | Discover attached modems |
+| `POST` | `/api/modems/connect` | Connect & configure a modem (`{"modem_id": "..."}`) |
+| `POST` | `/api/modems/disconnect` | Release a connection |
+| `GET`  | `/api/modems/status` | Aggregate snapshot |
+| `GET`  | `/api/modems/{id}/status` | One device |
+| `GET`  | `/api/modems/{id}/sim-info` | Read SIM identifiers |
+| `GET`  | `/api/modems/{id}/sms` | List SMS in storage |
+| `POST` | `/api/modems/{id}/sms/send` | Send an SMS |
+| `DELETE` | `/api/modems/{id}/sms/{message_id}` | Delete a stored SMS |
+| `POST` | `/api/modems/{id}/ussd` | Run a USSD command |
+| `GET`  | `/api/modems/{id}/balance` | Balance via operator-specific USSD |
+
+### Legacy (1.x compatibility)
+
+`/api/status`, `/api/sim-info`, `/api/sms`, `/api/sms/send`,
+`/api/sms/{message_id}`, `/api/ussd`, `/api/balance` — they all act on the
+**first** connected modem. Prefer the per-modem endpoints in new clients.
+
+### WebSocket
+
+`ws://localhost:8000/ws` — every text frame the client sends is echoed back
+as a `pong`, and the server publishes a `status_update` payload every
+`APP_WS_BROADCAST_INTERVAL` seconds.
+
+---
+
+## 🧪 Testing
+
+```bash
+pip install -r requirements-dev.txt
+pytest                       # full suite with coverage
+ruff check app tests         # lint
+mypy app                     # static types
+```
+
+The suite covers:
+
+- GSM 7-bit / hex / UCS-2 encoders.
+- The AT client (success, error, timeout, retries) against an in-memory
+  transport.
+- Operator repository loading, lookup and error paths.
+- The modem pool (discovery, connect, double-connect, shutdown).
+- HTTP smoke tests via `httpx.AsyncClient` and the FastAPI ASGI transport.
+
+Hardware-dependent paths are intentionally not unit-tested — verify them
+manually with a real modem, or write integration tests gated behind the
+`integration` marker (already declared in `pyproject.toml`).
+
+---
+
+## 🧠 Architecture
+
+```text
+       ┌──────────────────────────────┐
+       │           FastAPI            │
+       │     routers + WS endpoint    │
+       └──────────┬───────────────────┘
+                  │ depends on
+                  ▼
+       ┌──────────────────────────────┐
+       │          ModemPool           │  one per process
+       │  detect / connect / status   │
+       └──────┬─────────────┬─────────┘
+              │             │
+              ▼             ▼
+   ┌──────────────────┐  ┌──────────────────────┐
+   │  ModemDetector   │  │     ModemDevice      │  one per port
+   │ list_ports + AT  │  │ status / SMS / USSD  │
+   └──────────────────┘  └─────────┬────────────┘
+                                   │ uses
+                                   ▼
+                          ┌──────────────────┐
+                          │     ATClient     │  request/response framing
+                          └────────┬─────────┘
+                                   ▼
+                          ┌──────────────────┐
+                          │ SerialTransport  │  async wrapper over pyserial
+                          └──────────────────┘
+```
+
+Cross-cutting concerns:
+
+- `OperatorRepository` (read-only, JSON-backed) — single point of truth for
+  USSD codes and APN settings.
+- `WebSocketManager` — fan-out broadcasts and lifecycle.
+- `Settings` (Pydantic) — environment-driven configuration with validation.
+
+The dependency direction always flows **towards the hardware** — schemas
+and routers never import from the modem layer except through the pool, and
+the modem layer never imports from FastAPI.
+
+---
+
+## 🛡 Troubleshooting
+
+| Symptom | Likely cause | Fix |
+|---------|--------------|-----|
+| `Modem … was not detected` | Port not enumerated yet | Replug the modem or call `POST /api/modems/detect` again |
+| Detection lists ports but `responsive: false` | Another app holds the COM port (Huawei Mobile Partner / Hilink dashboard / Mobile Connect) | Quit the Huawei desktop app and rerun detection — it must release `COM12` (or equivalent) |
+| `FileNotFoundError` opening `COMxx` (Windows) | Modem is in CD-ROM mode — `usb_modeswitch` hasn't switched it to modem mode yet (PID `0000`) | Run Huawei Mobile Partner once so it triggers the mode switch, then close it before starting this service |
+| `Permission denied: /dev/ttyUSB0` (Linux) | User not in `dialout` group | `sudo usermod -aG dialout $USER`, then re-login |
+| AT commands time out on every port | Wrong physical port — Huawei modems expose 2–3 COM ports and only one accepts AT | Try connecting to each `huawei_COMxx` in turn; the modem port is usually labelled "Modem" in Device Manager |
+| SMS rejected with `+CMS ERROR: 304` | Charset/PDU mismatch or missing SMSC | The system uses UCS-2 by default — ensure the SIM has an SMSC configured (`AT+CSCA?`) |
+| USSD returns empty text | Some operators reply to interactive USSD; the modem session keeps the menu open | Call the next code from the menu — not all USSD trees are scriptable |
+| Container can't see modem | Missing device mapping | Update `docker-compose.yml` `devices:` and the `group_add` GID to match your host's `dialout` group |
+
+Enable verbose logs with `APP_LOG_LEVEL=DEBUG` for a deeper trace.
+
+### Windows-specific notes
+
+Huawei modems on Windows are typically driven by the OEM `huawei_enum_vbus`
+driver, which exposes three virtual COM ports per modem:
+
+* **3G Modem** — accepts AT commands (this is the one we want).
+* **3G PC UI Interface** — used by the Mobile Partner GUI; rarely answers AT.
+* **3G Application Interface** — diagnostics; does not answer AT.
+
+If `Huawei Mobile Partner` (or `HwMobileBroadband.exe`, `MobilePartner.exe`,
+`DataCardMonitor.exe`) is running, it will keep an exclusive lock on the
+modem port and the API will receive `FileNotFoundError` when it tries to
+open it. The fix is to fully exit that software (or disable its
+auto-start) before launching this service.
+
+---
+
+## 📜 Versioning & changelog
+
+Current release: **3.0.0** — full rewrite with strict layered architecture,
+Pydantic V2 schemas, Docker support, and a real test suite. Legacy 1.x
+endpoints remain available for compatibility.
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome. Please run `ruff check`, `mypy app` and `pytest`
+before opening a PR. New operators only require an entry in
+[`data/operators.json`](data/operators.json).
+
+## 📄 License
+
+MIT — see [`LICENSE`](LICENSE).

@@ -1,0 +1,80 @@
+{
+  "$schema": "Operator profile registry — extend without code changes",
+  "operators": [
+    {
+      "id": "ooredoo_dz",
+      "name": "Ooredoo Algeria",
+      "country": "Algeria",
+      "country_code": "DZ",
+      "mcc": "603",
+      "mnc": ["02"],
+      "imsi_prefixes": ["60302"],
+      "iccid_prefixes": ["8921302"],
+      "ussd": {
+        "balance": "*222#",
+        "data_balance": "*222*2#",
+        "recharge": "*100*{code}#",
+        "my_number": "*101#",
+        "call_forward": "*21*{number}#",
+        "call_forward_cancel": "##21#"
+      },
+      "apn": {
+        "name": "internet",
+        "apn": "internet",
+        "username": "",
+        "password": "",
+        "auth_type": "none"
+      }
+    },
+    {
+      "id": "djezzy_dz",
+      "name": "Djezzy",
+      "country": "Algeria",
+      "country_code": "DZ",
+      "mcc": "603",
+      "mnc": ["01"],
+      "imsi_prefixes": ["60301"],
+      "iccid_prefixes": ["8921301"],
+      "ussd": {
+        "balance": "*710#",
+        "data_balance": "*710*2#",
+        "recharge": "*100*{code}#",
+        "my_number": "*220#",
+        "call_forward": "*21*{number}#",
+        "call_forward_cancel": "##21#"
+      },
+      "apn": {
+        "name": "djezzy.internet",
+        "apn": "djezzy.internet",
+        "username": "",
+        "password": "",
+        "auth_type": "none"
+      }
+    },
+    {
+      "id": "mobilis_dz",
+      "name": "Mobilis",
+      "country": "Algeria",
+      "country_code": "DZ",
+      "mcc": "603",
+      "mnc": ["03"],
+      "imsi_prefixes": ["60303"],
+      "iccid_prefixes": ["8921303"],
+      "ussd": {
+        "balance": "*222#",
+        "data_balance": "*222*2#",
+        "recharge": "*130*{code}#",
+        "my_number": "*101#",
+        "call_forward": "*21*{number}#",
+        "call_forward_cancel": "##21#"
+      },
+      "apn": {
+        "name": "internet",
+        "apn": "internet",
+        "username": "",
+        "password": "",
+        "auth_type": "none"
+      }
+    }
+  ]
+}
